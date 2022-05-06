@@ -221,22 +221,16 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   # Dump fingerprints
   script.Print("Target: {}".format(target_info.fingerprint))
 
-  # Build info
-  script.Print("                                         ");
-  script.Print("            _____            _     _     ");
-  script.Print("           |  __ \          (_)   | |    ");
-  script.Print("   ___ _ __| |  | |_ __ ___  _  __| |    ");
-  script.Print("  / __| '__| |  | | '__/ _ \| |/ _\`|    ");
-  script.Print(" | (__| |  | |__| | | | (_) | | (_| |    ");
-  script.Print("  \___|_|  |_____/|_|_ \___/|_|\__,_|  _ ");
-  script.Print("     /\             | |         (_)   | |");
-  script.Print("    /  \   _ __   __| |_ __ ___  _  __| |");
-  script.Print("   / /\ \ | '_ \ / _\`| '__/ _ \| |/ _\`|");
-  script.Print("  / ____ \| | | | (_| | | | (_) | | (_| |");
-  script.Print(" /_/    \_\_| |_|\__,_|_|  \___/|_|\__,_|");
-  script.Print("                                         ");
 
-  buildid = target_info.GetBuildProp("ro.modversion")
+  #Print ASCII
+  script.Print("--------------------------------------------------");
+  script.Print("--------------------------------------------------");
+  script.Print("|                  riceDroid                   |");
+  script.Print("--------------------------------------------------");
+  script.Print("|            By:- riceDroid Team                   |");
+  script.Print("--------------------------------------------------");
+  script.Print(" ")
+
   androidver = target_info.GetBuildProp("ro.build.version.release")
   buildidn = target_info.GetBuildProp("ro.build.id")
   buildday = target_info.GetBuildProp("ro.build.date")
@@ -244,7 +238,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   device = target_info.GetBuildProp("ro.build.product")
   manufacturer = target_info.GetBuildProp("ro.product.manufacturer")
   script.Print("***********************************************");
-  script.Print(" ROM version      : %s"%(buildid));
   script.Print(" Android version  : %s"%(androidver));
   script.Print(" Security patch   : %s"%(securep));
   script.Print(" Build date       : %s"%(buildday));
