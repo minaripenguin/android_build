@@ -1848,7 +1848,9 @@ function b()
 
 function m()
 (
-    ./vendor/lineage/build/tools/changelog.sh $TARGET_PRODUCT
+    rm -rf out/target/product/*/obj/KERNEL_OBJ 
+    echo "Removing kernel artifacts from out/target/product/*/obj/KERNEL_OBJ" >&2
+    ./vendor/lineage/build/tools/changelog.sh $TARGET_DEVICE
     echo "Generating changelogs for $TARGET_PRODUCT" >&2
     _trigger_build "all-modules" "$@"
 )
@@ -1875,6 +1877,8 @@ function mmma()
 
 function make()
 {
+    rm -rf out/target/product/*/obj/KERNEL_OBJ 
+    echo "Removing kernel artifacts from out/target/product/*/obj/KERNEL_OBJ" >&2
     ./vendor/lineage/build/tools/changelog.sh $TARGET_PRODUCT
     echo "Generating changelogs for $TARGET_PRODUCT" >&2
     _wrap_build $(get_make_command "$@") "$@"
