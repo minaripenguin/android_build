@@ -1848,6 +1848,8 @@ function b()
 
 function m()
 (
+    ./vendor/lineage/build/tools/changelog.sh $TARGET_PRODUCT
+    echo "Generating changelogs for $TARGET_PRODUCT" >&2
     _trigger_build "all-modules" "$@"
 )
 
@@ -1873,6 +1875,8 @@ function mmma()
 
 function make()
 {
+    ./vendor/lineage/build/tools/changelog.sh $TARGET_PRODUCT
+    echo "Generating changelogs for $TARGET_PRODUCT" >&2
     _wrap_build $(get_make_command "$@") "$@"
 }
 
