@@ -1848,10 +1848,8 @@ function b()
 
 function m()
 (
-    rm -rf out/target/product/*/obj/KERNEL_OBJ 
-    echo "Removing kernel artifacts from out/target/product/*/obj/KERNEL_OBJ" >&2
-    ./vendor/lineage/build/tools/changelog.sh $TARGET_DEVICE
-    echo "Generating changelogs for $TARGET_PRODUCT" >&2
+    makecleankernel
+    makechangelog
     _trigger_build "all-modules" "$@"
 )
 
@@ -1877,11 +1875,23 @@ function mmma()
 
 function make()
 {
-    rm -rf out/target/product/*/obj/KERNEL_OBJ 
-    echo "Removing kernel artifacts from out/target/product/*/obj/KERNEL_OBJ" >&2
-    ./vendor/lineage/build/tools/changelog.sh $TARGET_PRODUCT
-    echo "Generating changelogs for $TARGET_PRODUCT" >&2
+    makecleankernel
+    makechangelog
     _wrap_build $(get_make_command "$@") "$@"
+}
+
+function makechangelog()
+{
+    local LOCAL_TARGET_PRODUCT=${TARGET_PRODUCT#lineage_}
+    ./vendor/lineage/build/tools/changelog.sh
+    echo "Generating changelogs for $LOCAL_TARGET_PRODUCT" >&2
+}
+
+function makecleankernel()
+{
+    local TARGET_KERNEL_OUTPUT_DIR="out/target/product/*/obj/KERNEL_OBJ"
+    rm -rf $TARGET_KERNEL_OUTPUT_DIR
+    echo "Removing kernel artifacts from $TARGET_KERNEL_OUTPUT_DIR" >&2
 }
 
 function provision()
