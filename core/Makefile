@@ -6181,7 +6181,7 @@ endif
 	@# help early validation of the .zip file while uploading it.
 	$(hide) find $(zip_root)/META | sort >$@.list
 	$(hide) find $(zip_root) -path $(zip_root)/META -prune -o -print | sort >>$@.list
-ifneq (,$(filter bluejay cheetah lynx oriole panther raven tangorpro, $(subst _, ,$(TARGET_PRODUCT))))
+ifeq ($(TARGET_COMPRESSED_SOONG_ZIP),true)
 	$(hide) $(SOONG_ZIP) -d -o $@ -C $(zip_root) -r $@.list
 else
 	$(hide) $(SOONG_ZIP) -L 0 -d -o $@ -C $(zip_root) -r $@.list
