@@ -1929,6 +1929,7 @@ function _trigger_build()
 
 function m()
 (
+    makecleankernel
     _trigger_build "all-modules" "$@"
 )
 
@@ -1954,6 +1955,7 @@ function mmma()
 
 function make()
 {
+    makecleankernel
     _wrap_build $(get_make_command "$@") "$@"
 }
 
@@ -2127,6 +2129,13 @@ function setup_ccache() {
             echo "Error: ccache not found. Please install ccache." >&2
         fi
     fi
+}
+
+function makecleankernel()
+{
+    local TARGET_KERNEL_OUTPUT_DIR="out/target/product/*/obj/KERNEL_OBJ"
+    rm -rf $TARGET_KERNEL_OUTPUT_DIR
+    echo "Removing kernel artifacts from $TARGET_KERNEL_OUTPUT_DIR" >&2
 }
 
 setup_ccache
