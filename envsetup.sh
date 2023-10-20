@@ -2138,7 +2138,7 @@ function makecleankernel()
     echo "Removing kernel artifacts from $TARGET_KERNEL_OUTPUT_DIR" >&2
 }
 
-function buildupload() {
+function riseupload() {
     read -p "Enter your SourceForge username: " sf_username
     read -p "Enter the output filename (without .zip extension): " filename
     read -p "Enter the package build type (fastboot or ota): " buildtype
