@@ -2150,6 +2150,31 @@ function buildupload() {
     rsync -e ssh "$source_file" "$destination"
 }
 
+function riseup() {
+    local device="$1"
+    local build_type="$2"
+
+    if [ -z "$device" ]; then
+        echo "Correct usage: riseup <device_codename> [build_type]"
+        echo "Available build types: user, userdebug, eng"
+        return 1
+    fi
+
+    if [ -z "$build_type" ]; then
+        build_type="userdebug"
+    fi
+
+    case "$build_type" in
+        user|userdebug|eng)
+        lunch rising_"$device"-"$build_type"
+        ;;
+        *)
+        echo "Invalid build type."
+        echo "Available build types are: user, userdebug & eng"
+        ;;
+    esac
+}
+
 setup_ccache
 validate_current_shell
 set_global_paths
