@@ -2188,6 +2188,21 @@ function ascend() {
     fi
 }
 
+function setupGlobalThinLto() {
+    local option="$1"
+    if [[ "$option" == "true" ]]; then
+        echo "Building with ThinLTO."
+        export GLOBAL_THINLTO=true
+        export USE_THINLTO_CACHE=true
+    elif [[ "$option" == "false" ]]; then
+        echo "Disabling ThinLTO."
+        export GLOBAL_THINLTO=false
+        export USE_THINLTO_CACHE=false
+    else
+        echo "Invalid option. Please provide either 'true' or 'false'."
+    fi
+}
+
 setup_ccache
 validate_current_shell
 set_global_paths
