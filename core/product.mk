@@ -278,6 +278,9 @@ _product_single_value_vars += PRODUCT_MEMTAG_HEAP_SKIP_DEFAULT_PATHS
 # Whether the Scudo hardened allocator is enabled platform-wide
 _product_single_value_vars += PRODUCT_USE_SCUDO
 
+# Whether the 32-bit Scudo hardened allocator is enabled platform-wide
+_product_single_value_vars += PRODUCT_USE_SCUDO_32_BIT
+
 # List of extra VNDK versions to be included
 _product_list_vars += PRODUCT_EXTRA_VNDK_VERSIONS
 

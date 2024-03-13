@@ -322,8 +322,8 @@ ifneq ($(filter address thread hwaddress,$(my_sanitize)),)
 endif
 
 # Or if disabled globally.
-ifneq ($(PRODUCT_USE_SCUDO),true)
-  my_sanitize := $(filter-out scudo,$(my_sanitize))
+ifeq ($(and $(filter true,$(PRODUCT_USE_SCUDO)),$(filter true,$(PRODUCT_USE_SCUDO_32_BIT))),)
+    my_sanitize := $(filter-out scudo,$(my_sanitize))
 endif
 
 # Undefined symbols can occur if a non-sanitized library links
