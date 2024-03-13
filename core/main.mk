@@ -1423,12 +1423,6 @@ else ifdef FULL_BUILD
   # WARNING: The product_MODULES variable is depended on by external files.
   # It contains the list of register names that will be installed on the device
   product_MODULES := $(_pif_modules)
-
-  # Verify the artifact path requirements made by included products.
-  is_asan := $(if $(filter address,$(SANITIZE_TARGET)),true)
-  ifeq (,$(or $(is_asan),$(DISABLE_ARTIFACT_PATH_REQUIREMENTS)))
-    include $(BUILD_SYSTEM)/artifact_path_requirements.mk
-  endif
 else
   # We're not doing a full build, and are probably only including
   # a subset of the module makefiles.  Don't try to build any modules
