@@ -2116,22 +2116,6 @@ set_global_paths
 source_vendorsetup
 addcompletions
 
-# check and set ccache path on envsetup
-if [ -z ${CCACHE_EXEC} ]; then
-    ccache_path=$(which ccache)
-    if [ ! -z "$ccache_path" ]; then
-        export USE_CCACHE=1
-        export CCACHE_EXEC="$ccache_path"
-        if [ -z ${CCACHE_DIR} ]; then
-            export CCACHE_DIR=${HOME}/.ccache
-        fi
-        $ccache_path -o compression=true
-        echo -e "ccache enabled and CCACHE_EXEC has been set to : $ccache_path"
-    else
-        echo -e "ccache not found installed!"
-    fi
-fi
-
 export ANDROID_BUILD_TOP=$(gettop)
 
 . $ANDROID_BUILD_TOP/vendor/lineage/build/envsetup.sh
