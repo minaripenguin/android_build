@@ -2185,6 +2185,86 @@ function ascend() {
     fi
 }
 
+function add_remote() {
+    local remote_name="$1"
+    local remote_url="$2"
+    local manifest_path="android/snippets/rising.xml"
+    local exclusion_list=("android" "vendor/risingOTA" "packages/apps/FaceUnlock" "vendor/gms")
+    if [[ -z "$remote_name" || -z "$remote_url" ]]; then
+        echo "Usage: add_remote <remote_name> <remote_url>"
+        return 1
+    fi
+    echo "Adding remote '$remote_name' with URL '$remote_url' to repositories in manifest: $manifest_path"
+    while IFS= read -r line; do
+        if [[ $line == *"<project "* && $line == *"remote="* ]]; then
+            local repo_path=$(echo "$line" | grep -oP 'path="\K[^"]+')
+            local manifest_entry=$(echo "$line" | grep -oP 'name="\K[^"]+')
+            local existing_remote=$(echo "$line" | grep -oP 'remote="\K[^"]+')
+            if [[ ! " ${exclusion_list[@]} " =~ " $repo_path " ]]; then
+                if [[ "$existing_remote" != "$remote_name" ]]; then
+                    local new_url="$remote_url/$manifest_entry"
+                    git -C "$repo_path" remote add "$remote_name" "$new_url"
+                    echo "Added remote '$remote_name' with URL '$new_url' to repository: $repo_path"
+                else
+                    echo "Remote '$remote_name' already exists in repository: $repo_path"
+                fi
+            else
+                echo "Repository '$repo_path' is in the exclusion list. Skipping..."
+            fi
+        fi
+    done < "$manifest_path"
+}
+
+function remove_remote() {
+    local remote_name="$1"
+    local manifest_path="android/snippets/rising.xml"
+    if [[ -z "$remote_name" ]]; then
+        echo "Usage: remove_remote <remote_name>"
+        return 1
+    fi
+    echo "Removing remote '$remote_name' from repositories in manifest: $manifest_path"
+    while IFS= read -r line; do
+        if [[ $line == *"<project "* && $line == *"remote="* ]]; then
+            local repo_path=$(echo "$line" | grep -oP 'path="\K[^"]+')
+            if git -C "$repo_path" remote | grep -q "^$remote_name$"; then
+                git -C "$repo_path" remote remove "$remote_name"
+                echo "Removed remote '$remote_name' from repository: $repo_path"
+            else
+                echo "Remote '$remote_name' doesn't exist in repository: $repo_path"
+            fi
+        fi
+    done < "$manifest_path"
+}
+
+function force_push() {
+    local remote_name="$1"
+    local remote_branch="$2"
+    local manifest_path="android/snippets/rising.xml"
+    local exclusion_list=("android" "vendor/risingOTA" "packages/apps/FaceUnlock" "vendor/gms")
+    echo "Pushing changes to remote '$remote_name' in repositories from manifest: $manifest_path"
+    while IFS= read -r line; do
+        if [[ $line == *"<project "* && $line == *"remote="* ]]; then
+            local repo_path=$(echo "$line" | grep -oP 'path="\K[^"]+')
+            local remote=$(echo "$line" | grep -oP 'remote="\K[^"]+')
+            local branch=$(echo "$line" | grep -oP 'revision="\K[^"]+')
+            if [[ ! "$remote" =~ ^(staging|rising)$ ]]; then
+                echo "Invalid remote '$remote' for repository '$repo_path'. Skipping..."
+                continue
+            fi
+            if [[ " ${exclusion_list[@]} " =~ " $repo_path " ]]; then
+                echo "Repository '$repo_path' is in the exclusion list. Skipping..."
+                continue
+            fi
+            if [[ -n "$remote_branch" ]]; then
+                branch="$remote_branch"
+            fi
+            echo "Pushing changes from branch '$branch' to remote '$remote_name' in repository: $repo_path"
+            git -C "$repo_path" checkout -b "$branch" &> /dev/null
+            git -C "$repo_path" push -f "$remote_name" "$branch" 2>&1 | grep -v "already exists"
+        fi
+    done < "$manifest_path"
+}
+
 function setupGlobalThinLto() {
     local option="$1"
     if [[ "$option" == "true" ]]; then
