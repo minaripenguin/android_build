@@ -2259,7 +2259,9 @@ function force_push() {
                 branch="$remote_branch"
             fi
             echo "Pushing changes from branch '$branch' to remote '$remote_name' in repository: $repo_path"
-            git -C "$repo_path" checkout -b "$branch" &> /dev/null
+            if ! git -C "$repo_path" show-ref --quiet refs/heads/"$branch"; then
+                git -C "$repo_path" checkout -b "$branch" &> /dev/null
+            fi
             git -C "$repo_path" push -f "$remote_name" "$branch" 2>&1 | grep -v "already exists"
         fi
     done < "$manifest_path"
