@@ -2283,6 +2283,25 @@ function setupGlobalThinLto() {
     fi
 }
 
+# usage:
+# pushRepo 190000 main fourteen
+function pushRepo() {
+    total_heads=$1
+    remote=$2
+    branch=$3
+    repo_path=$4
+    while [ $total_heads -gt 0 ]
+    do
+        commit_offset=$(( total_heads - 10000 ))
+        if [ $commit_offset -lt 0 ]; then
+            commit_offset=0
+        fi
+        git -C "$repo_path" push -u $remote HEAD~$commit_offset:refs/heads/$branch
+
+        total_heads=$(( total_heads - 10000 ))
+    done
+}
+
 setup_ccache
 validate_current_shell
 set_global_paths
