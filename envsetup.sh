@@ -2150,6 +2150,7 @@ function riseupload() {
 function riseup() {
     local device="$1"
     local build_type="$2"
+    source ${ANDROID_BUILD_TOP}/vendor/rising/vars/aosp_target_release
 
     if [ -z "$device" ]; then
         echo "Correct usage: riseup <device_codename> [build_type]"
@@ -2163,7 +2164,7 @@ function riseup() {
 
     case "$build_type" in
         user|userdebug|eng)
-        lunch rising_"$device"-"$build_type"
+        lunch rising_"$device"-"$aosp_target_release"-"$build_type"
         ;;
         *)
         echo "Invalid build type."
